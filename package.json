@@ -2,9 +2,12 @@
   "name": "bookindex",
   "version": "0.0.0",
   "description": "Index the family library",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify -t brfs -d client.js -o client-bundle.js",
+    "watch": "watchify -t brfs -d client.js -o client-bundle.js",
+    "start": "nwjs ."
   },
   "repository": {
     "type": "git",
@@ -15,5 +18,17 @@
   "bugs": {
     "url": "https://github.com/TehShrike/bookindex/issues"
   },
-  "homepage": "https://github.com/TehShrike/bookindex"
+  "homepage": "https://github.com/TehShrike/bookindex",
+  "dependencies": {
+    "abstract-state-router": "^5.0.1",
+    "aws-lib": "^0.3.0",
+    "brfs": "^1.4.0",
+    "domready": "^1.0.7",
+    "less": "^2.4.0",
+    "mannish": "^1.0.1",
+    "ractive": "^0.6.1",
+    "ractive-state-router": "^5.0.0",
+    "split": "^0.3.3"
+  },
+  "node-main": "server.js"
 }

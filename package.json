@@ -22,10 +22,12 @@
   "dependencies": {
     "abstract-state-router": "^5.0.1",
     "aws-lib": "^0.3.0",
+    "bottleneck": "^1.5.3",
     "brfs": "^1.4.0",
     "domready": "^1.0.7",
     "less": "^2.4.0",
     "mannish": "^1.0.1",
+    "promise": "^6.1.0",
     "ractive": "^0.6.1",
     "ractive-state-router": "^5.0.0",
     "split": "^0.3.3",

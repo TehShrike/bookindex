@@ -1,11 +1,19 @@
 var amazonFetcher = require('./isbn-amazon-fetcher')
 var barcodeScannerWatcher = require('./barcode-scanner-watcher')
 
-module.exports = functino(getMediator) {
-	amazonFetcher(getMediator)
-	barcodeScannerWatcher(getMediator)
+module.exports = function() {
+	var scannerWatcher = barcodeScannerWatcher()
 
-	var mediator = getMediator('scannerServer')
+	scannerWatcher.on('file', function(stream) {
+		stream.on('data', function(isbn) {
+			isbn = isbn.toString()
+			amazonFetcher(isbn).then(function(book) {
+				console.log(book)
+			})
+		})
+	})
 
-	mediator.subscribe('')
+	return function stop() {
+		scannerWatcher.stop()
+	}
 }

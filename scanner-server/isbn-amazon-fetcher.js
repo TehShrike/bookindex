@@ -1,17 +1,21 @@
 var aws = require('aws-lib')
 var Promise = require('promise')
+var Bottleneck = require('bottleneck')
 
-var productAdvertisingApi = aws.createProdAdvClient(accessKey, secretAccessKey, associateTag)
+var config = require('../config')
 
-var lookupIsbn = Promise.denodeify(productAdvertisingApi.call.bind(productAdvertisingApi))
+var productAdvertisingApi = aws.createProdAdvClient(config.aws.accessKey, config.aws.secretAccessKey, config.aws.associateTag)
+var lookupUnthrottled = productAdvertisingApi.call.bind(productAdvertisingApi)
+
+var limiter = new Bottleneck(1, 1000)
+var submitToListener = Promise.denodeify(limiter.submit.bind(limiter, lookupUnthrottled))
 
 module.exports = function(isbn) {
-
 	if (Array.isArray(isbn)) {
 		isbn = isbn.join(',')
 	}
 
-	return lookupIsbn('ItemLookup', {
+	return submitToListener('ItemLookup', {
 		ResponseGroup: 'Medium',
 		SearchIndex: 'Books',
 		IdType: 'ISBN',

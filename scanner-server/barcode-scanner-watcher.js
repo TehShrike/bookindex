@@ -50,8 +50,7 @@ var streamCsvToIsbn = through2(function(line, enc, callback) {
 		var columns = line.split(',')
 		var isbn = columns[columns.length - 1]
 
-		this.push(isbn)
-
-		callback()
+		this.push(isbn, 'utf8')
 	}
+	callback()
 })

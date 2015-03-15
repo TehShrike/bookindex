@@ -10,7 +10,7 @@ var lookupUnthrottled = productAdvertisingApi.call.bind(productAdvertisingApi)
 var limiter = new Bottleneck(1, 1000)
 var submitToListener = Promise.denodeify(limiter.submit.bind(limiter, lookupUnthrottled))
 
-module.exports = function(isbn) {
+function lookup(isbn) {
 	if (Array.isArray(isbn)) {
 		isbn = isbn.join(',')
 	}
@@ -20,5 +20,32 @@ module.exports = function(isbn) {
 		SearchIndex: 'Books',
 		IdType: 'ISBN',
 		ItemId: isbn
+	}).then(function(result) {
+		return result//result.Items.Item
 	})
 }
+
+module.exports = lookup
+
+function find(value) {
+	return function checkObject(o, path) {
+		path = path || []
+		if (o == value) {
+			console.log('found', value, 'at', path)
+			// throw new Error('FOUND')
+		}
+		if (o && path.length < 10) {
+			Object.keys(o).forEach(function(key) {
+				// console.log('checking', path.concat(key))
+				checkObject(o[key], path.concat(key))
+			})
+		}
+	}
+}
+
+var a = lookup('9780310246077')
+a.then(find('9780310246077'))
+a.then(find('0310246075'))
+// a.then(function(result) {
+// 	console.log('isbn', result.Items.Item.ItemAttributes.ISBN)
+// })

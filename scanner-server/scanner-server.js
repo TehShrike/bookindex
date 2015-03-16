@@ -1,6 +1,6 @@
 var amazonFetcher = require('./isbn-amazon-fetcher')
 var barcodeScannerWatcher = require('./barcode-scanner-watcher')
-var isbnModel = require('isbn-model')
+var isbnModel = require('barcode-model')
 
 module.exports = function(getMediator) {
 	var mediator = getMediator('scanner server')
@@ -25,7 +25,11 @@ module.exports = function(getMediator) {
 				if (results.found.length > 0) {
 					mediator.publish('books scanned', results.found)
 				}
-				return cb(results.notFound)
+				try {
+					return cb(results.notFound)
+				} catch (e) {
+					console.error(e)
+				}
 			})
 		})
 	}
@@ -74,7 +78,7 @@ function startBatch(limit, batchAction, promiseCallback) {
 			try {
 				promiseCallback(batchAction(queue)).catch(function(err) {
 					console.error(err, err.stack)
-					throw err
+					// throw err
 				})
 			} catch (e) {
 				console.error(e, e.stack)
@@ -92,8 +96,11 @@ function startBatch(limit, batchAction, promiseCallback) {
 function amazonResultToDatabaseRecord(amazonApiResult) {
 	return {
 		title: amazonApiResult.ItemAttributes.Title,
-		author: typeof amazonApiResult.ItemAttributes.Author === 'string' ? amazonApiResult.ItemAttributes.Author : 'unknown!',
-		isbn: amazonApiResult.ItemAttributes.ISBN || Math.random().toString(),
+		author: amazonApiResult.ItemAttributes.Author,
+		upc: amazonApiResult.ItemAttributes.UPC,
+		isbn: amazonApiResult.ItemAttributes.ISBN,
+		ean: amazonApiResult.ItemAttributes.EAN,
+		asin: amazonApiResult.ItemAttributes.ASIN,
 		amazon_result: JSON.stringify(amazonApiResult)
 	}
 }

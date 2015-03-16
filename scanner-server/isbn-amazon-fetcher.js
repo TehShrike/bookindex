@@ -21,7 +21,7 @@ function lookup(isbn) {
 		IdType: 'ISBN',
 		ItemId: isbn
 	}).then(function(result) {
-		return result//result.Items.Item
+		return result.Items.Item
 	})
 }
 
@@ -43,9 +43,9 @@ function find(value) {
 	}
 }
 
-var a = lookup('9780310246077')
-a.then(find('9780310246077'))
-a.then(find('0310246075'))
+// var a = lookup('9780310246077')
+// a.then(find('9780310246077'))
+// a.then(find('0310246075'))
 // a.then(function(result) {
 // 	console.log('isbn', result.Items.Item.ItemAttributes.ISBN)
 // })

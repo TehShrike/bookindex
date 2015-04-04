@@ -94,13 +94,15 @@ function startBatch(limit, batchAction, promiseCallback) {
 }
 
 function amazonResultToDatabaseRecord(amazonApiResult) {
+	var author = amazonApiResult.ItemAttributes.Author
+	var dumbAuthorString = Array.isArray(author) ? author.join('\n') : (author || 'unknown?!?!')
 	return {
 		title: amazonApiResult.ItemAttributes.Title,
-		author: amazonApiResult.ItemAttributes.Author,
+		author: dumbAuthorString,
 		upc: amazonApiResult.ItemAttributes.UPC,
-		isbn: amazonApiResult.ItemAttributes.ISBN,
+		isbn: amazonApiResult.ItemAttributes.ISBN || amazonApiResult.ItemAttributes.EISBN,
 		ean: amazonApiResult.ItemAttributes.EAN,
-		asin: amazonApiResult.ItemAttributes.ASIN,
+		asin: amazonApiResult.ASIN,
 		amazon_result: JSON.stringify(amazonApiResult)
 	}
 }

@@ -28,9 +28,9 @@ CREATE TABLE `barcode` (
   `amazon_result` TEXT,
   `last_amazon_update` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `isbn` (`isbn`),
-  UNIQUE KEY `ean` (`ean`),
-  UNIQUE KEY `upc` (`upc`),
+  KEY `isbn` (`isbn`),
+  KEY `ean` (`ean`),
+  KEY `upc` (`upc`),
   KEY `asin` (`asin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ;

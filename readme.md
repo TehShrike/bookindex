@@ -2,5 +2,4 @@
 
 # Todo
 
-- match up amazon api results with the barcode that was scanned
-- change the schema to store scanned barcode, ean, and isbn
+- BLAH make a little query-running helper and use node-mysql instead of knex because UGH

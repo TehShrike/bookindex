@@ -7,12 +7,13 @@ module.exports = function(getMediator) {
 	var scannerWatcher = barcodeScannerWatcher()
 
 	function startAmazonBatch() {
-		return startBatch(10, amazonFetcher, function emitBooks(promise) {
+		return startBatch(1, amazonFetcher, function emitBooks(promise) {
 			return promise.then(function(results) {
 				if (results.length > 0) {
-					console.log('got back from amazon:', results.length)
-					mediator.publish('books scanned', results)
-					return isbnModel.insert(results.map(amazonResultToDatabaseRecord))
+					// console.log('got back from amazon:', results.length)
+					var dbBooks = results.map(amazonResultToDatabaseRecord)
+					mediator.publish('books scanned', dbBooks)
+					return isbnModel.insert(dbBooks)
 				}
 			})
 		})

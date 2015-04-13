@@ -11,17 +11,17 @@ var limiter = new Bottleneck(1, 1000)
 var submitToListener = Promise.denodeify(limiter.submit.bind(limiter, lookupUnthrottled))
 
 function lookup(isbn) {
-	if (Array.isArray(isbn)) {
-		isbn = isbn.join(',')
-	}
-
 	return submitToListener('ItemLookup', {
 		ResponseGroup: 'Medium',
 		SearchIndex: 'Books',
 		IdType: 'ISBN',
 		ItemId: isbn
 	}).then(function(result) {
-		return result.Items.Item
+		var item = result.Items.Item
+		return {
+			barcode: isbn,
+			book: Array.isArray(item) ? item[0] : item
+		}
 	})
 }
 

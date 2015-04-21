@@ -8,13 +8,16 @@ module.exports = function(getMediator) {
 
 	function startAmazonBatch() {
 		return startBatch(1, amazonFetcher, function emitBooks(promise) {
-			return promise.then(function(results) {
-				if (results.length > 0) {
-					// console.log('got back from amazon:', results.length)
-					var dbBooks = results.map(amazonResultToDatabaseRecord)
-					mediator.publish('books scanned', dbBooks)
-					return isbnModel.insert(dbBooks)
-				}
+			return promise.then(function(result) {
+				var dbBook = amazonResultToDatabaseRecord(result.book)
+
+				var insertPromise = isbnModel.insert(dbBook)
+
+				insertPromise.then(function(books) {
+					mediator.publish('books scanned', books)
+				})
+
+				return insertPromise
 			})
 		})
 	}
@@ -22,7 +25,6 @@ module.exports = function(getMediator) {
 	function startDatabaseBatch(cb) {
 		return startBatch(20, isbnModel.findIsbnsInDatabase, function(promise) {
 			return promise.then(function(results) {
-				console.log('got back from the database:', results.found.length)
 				if (results.found.length > 0) {
 					mediator.publish('books scanned', results.found)
 				}
@@ -95,15 +97,30 @@ function startBatch(limit, batchAction, promiseCallback) {
 }
 
 function amazonResultToDatabaseRecord(amazonApiResult) {
-	var author = amazonApiResult.ItemAttributes.Author
-	var dumbAuthorString = Array.isArray(author) ? author.join('\n') : (author || 'unknown?!?!')
 	return {
 		title: amazonApiResult.ItemAttributes.Title,
-		author: dumbAuthorString,
+		author: getSomeAuthorString(amazonApiResult),
 		upc: amazonApiResult.ItemAttributes.UPC,
 		isbn: amazonApiResult.ItemAttributes.ISBN || amazonApiResult.ItemAttributes.EISBN,
 		ean: amazonApiResult.ItemAttributes.EAN,
 		asin: amazonApiResult.ASIN,
-		amazon_result: JSON.stringify(amazonApiResult)
+		amazonResult: JSON.stringify(amazonApiResult)
 	}
+}
+
+function getSomeAuthorString(item) {
+	var author = item.ItemAttributes.Author
+	var creator = item.ItemAttributes.Creator
+
+	if (Array.isArray(author)) {
+		return author.join('\n')
+	} else if (author) {
+		return author
+	} else if (creator) {
+		return creator.map(function(creator) {
+			return creator['#']
+		}).join('\n')
+	}
+
+	return 'unknown?!?!'
 }

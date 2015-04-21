@@ -15,7 +15,7 @@ var stop = scannerServer(getMediator)
 var mediator = getMediator('test app')
 
 mediator.subscribe('books scanned', function(books) {
-	console.log(books.length + ' books published to the mediator:', books.map(function(books) {
+	console.log(books.length + ' books published to the mediator:', books.map(function(book) {
 		return book.title + ' by ' + book.author
 	}))
 })

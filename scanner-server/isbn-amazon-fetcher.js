@@ -18,6 +18,10 @@ function lookup(isbn) {
 		ItemId: isbn
 	}).then(function(result) {
 		var item = result.Items.Item
+
+		if (!item) {
+			throw new Error(result)
+		}
 		return {
 			barcode: isbn,
 			book: Array.isArray(item) ? item[0] : item

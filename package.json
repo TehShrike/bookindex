@@ -24,17 +24,21 @@
     "aws-lib": "^0.3.0",
     "bottleneck": "^1.5.3",
     "brfs": "^1.4.0",
+    "camelize": "^1.0.0",
     "domready": "^1.0.7",
     "joi": "^6.0.8",
-    "knex": "^0.7.5",
     "less": "^2.4.0",
     "mannish": "^1.0.1",
     "mysql": "^2.5.5",
     "promise": "^6.1.0",
     "ractive": "^0.6.1",
     "ractive-state-router": "^5.0.0",
+    "snakeize": "0.0.1",
     "split": "^0.3.3",
     "through2": "^0.6.3"
   },
-  "node-main": "server.js"
+  "node-main": "server.js",
+  "devDependencies": {
+    "sql-concat": "^0.1.0"
+  }
 }

@@ -1,6 +1,6 @@
 var amazonFetcher = require('./isbn-amazon-fetcher')
 var barcodeScannerWatcher = require('./barcode-scanner-watcher')
-var isbnModel = require('barcode-model')
+var isbnModel = require('./db/barcode-model')
 
 module.exports = function(getMediator) {
 	var mediator = getMediator('scanner server')
@@ -14,7 +14,9 @@ module.exports = function(getMediator) {
 				var insertPromise = isbnModel.insert(dbBook)
 
 				insertPromise.then(function(books) {
-					mediator.publish('books scanned', books)
+					if (books.length > 0) {
+						mediator.publish('books scanned', books)
+					}
 				})
 
 				return insertPromise

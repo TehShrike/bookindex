@@ -35,3 +35,5 @@ CREATE TABLE `barcode` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ;
 
+ALTER TABLE barcode
+  ADD UNIQUE INDEX title_author (title(250), author(250));

@@ -4,7 +4,7 @@ var mannish = require('mannish')
 
 var getMediator = mannish()
 
-var originalTestFile = '/Users/josh/code/bookindex/scanner-server/test/BARCODES-TEST.TXT'
+var originalTestFile = '/Users/josh/code/bookindex/scanner-server/test/BARCODES-TEST-2.TXT'
 var copyForTest = '/Users/josh/code/bookindex/scanner-server/test/BARCODES.TXT'
 
 console.log('copying', originalTestFile, 'to', copyForTest)

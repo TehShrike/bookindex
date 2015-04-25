@@ -20,7 +20,8 @@ function lookup(isbn) {
 		var item = result.Items.Item
 
 		if (!item) {
-			throw new Error(result)
+			throw new Error((result.Items.Request && result.Items.Request.Errors && result.Items.Request.Errors.Error && result.Items.Request.Errors.Error.Message)
+				|| JSON.stringify(result))
 		}
 		return {
 			barcode: isbn,

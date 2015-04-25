@@ -37,8 +37,10 @@ function dumbWatch(path, cb) {
 		}
 	}, 1000)
 
+	timeout.unref()
+
 	return function stop() {
-		clearTimeout(timeout)
+		clearInterval(timeout)
 	}
 }
 
